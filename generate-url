@@ -4,6 +4,8 @@ import hmac
 import sys
 from urlparse import urlparse
 
+TOKEN_LENGTH = 20
+
 
 def gen_token_url(secret_key, current_url):
     """
@@ -12,7 +14,8 @@ def gen_token_url(secret_key, current_url):
     parsed = urlparse(current_url)
     token = hmac.new(key=secret_key, msg=parsed.hostname,
                      digestmod=hashlib.sha1).hexdigest()
-    return '%s://%s-%s' % (parsed.scheme, token[:30], parsed.hostname)
+    return '%s://%s-%s' % (parsed.scheme, token[:TOKEN_LENGTH],
+                           parsed.hostname)
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:

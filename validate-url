@@ -4,20 +4,22 @@ import hmac
 import sys
 from urlparse import urlparse
 
+TOKEN_LENGTH = 20
+
 
 def validate_token_url(secret_key, token_url):
     parsed = urlparse(token_url)
     given_token, actual_hostname = parsed.hostname.split('-', 1)
     gen_token = hmac.new(key=secret_key, msg=actual_hostname,
                          digestmod=hashlib.sha1).hexdigest()
-    return given_token == gen_token[:30]
+    return given_token == gen_token[:TOKEN_LENGTH]
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print "2 arguements needed: gen_url [key] [tokenized_url]"
         print "Accepts urls in form: http://token-hexhash.r73.cf2.rackcdn.com"
         print 'ex: validate-url secret ' \
-            'https://703a72dfd8b2fceb5fca26cc513907-0af0d69923e84e21b5d4b09a70fa89ee.r90.cf2.rackcdn.com'
+            'https://703a72dfd8b2fceb5fca-0af0d69923e84e21b5d4b09a70fa89ee.r90.cf2.rackcdn.com'
         print "Returns 'True' if valid url or 'False'"
         sys.exit(1)
 
